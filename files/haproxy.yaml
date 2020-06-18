@@ -1,0 +1,32 @@
+#cloud-config
+package_upgrade: true
+packages:
+  - haproxy
+apt:
+  preserve_sources_list: true
+  sources:
+    haproxy:
+      source: "ppa:vbernat/haproxy-1.7"
+runcmd:
+  - service haproxy enable
+  - service haproxy start
+write_files:
+  - path: /etc/haproxy/haproxy.cfg
+    content: |
+      frontend http_front
+        bind *:80
+        timeout connect 500ms
+        timeout client 1000ms
+        timeout server 1000ms
+        default_backend http_back
+
+      backend http_back
+        balance roundrobin
+        timeout connect 500ms
+        timeout client 1000ms
+        timeout server 1000ms
+        option httpchk HEAD /
+        http-check expect status 200
+        %{ for addr in ips ~}
+        server ${addr} ${addr}:80 check
+        %{ endfor ~}
