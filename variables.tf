@@ -53,21 +53,4 @@ variable "vpc_id" {
   description = "HAProxy (GCP): VPC ID HAProxy deployment"
   type        = string
 }
-##################
-# DNS (CloudFlare)
-##################
-variable "zone_id" {
-  description = "CloudFlare: Zone ID (if null - filter will be used)"
-  type        = string
-  default     = null
-}
 
-variable "domain" {
-  description = "CloudFlare: Your Domain name"
-  type        = string
-}
-
-variable "email" {
-  description = "CloudFlare: Owner's e-mail"
-  type        = string
-}
